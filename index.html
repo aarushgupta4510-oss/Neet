@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEET Premium Mock Test Portal</title>
+    <title>NEET Standard Mock Test Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -376,27 +376,26 @@
 <body>
 
     <div id="intro-screen" class="container">
-        <h1>NEET High-Yield Target Test</h1>
-        <p class="subtitle">Advanced Custom Evaluator — Rigorous Mock Environment</p>
+        <h1>NEET Standard Practice Mock</h1>
+        <p class="subtitle">NCERT-Aligned Concept Assessment Portal</p>
         
         <div class="rules-card">
-            <h3>Test Parameter Specifications:</h3>
+            <h3>Test Rules & Guidelines:</h3>
             <ul>
-                <li><strong>Format & Volume:</strong> 4 Subjects × 45 Questions = 180 Questions Total.</li>
-                <li><strong>Marking Architecture:</strong> Standard NEET parameters applied (+4 Marks for Correct, -1 Mark for Incorrect, 0 for Unanswered). Total Marks: 720.</li>
-                <li><strong>Special Constraint:</strong> Questions 42 to 45 in every single subject are strictly designated as high-difficulty <strong>Assertion & Reason</strong> evaluations.</li>
-                <li><strong>Timing Integration:</strong> Continuous 3-hour limit clock with precision multi-channel micro-tracking to compute average reaction speeds across disciplines.</li>
+                <li><strong>Questions Structure:</strong> 4 Subjects × 45 Questions = 180 Questions Total.</li>
+                <li><strong>Marking System:</strong> +4 for Correct answers, -1 for Wrong answers, 0 for Blank entries. Max Marks: 720.</li>
+                <li><strong>Timing Integration:</strong> 3-Hour Countdown. The results page tracks and provides the exact average time you took per <em>attempted</em> question for each subject.</li>
             </ul>
             <div class="syllabus-box">
-                <strong>Syllabus Scope:</strong> Physics (Basic Math, Vector Tools, Differentiation, Integration) | Chemistry (Mole Concept, Basic Laws) | Zoology (Animal Kingdom up to Annelids) | Botany (Living World, Biological Classification up to Monera).
+                <strong>Syllabus Scope:</strong> Physics (Basic Math Tools) | Chemistry (Basic Concepts & Mole Concept) | Botany (Living World & Biological Classification to Monera) | Zoology (Animal Kingdom up to Annelids).
             </div>
         </div>
-        <button class="btn" onclick="startExamPortal()">Initialize Test Matrix</button>
+        <button class="btn" onclick="startExamPortal()">Start Mock Test</button>
     </div>
 
     <div id="exam-screen" class="hidden">
         <header class="test-header">
-            <div class="test-title">NEET HIGH-LEVEL MOCK PANEL</div>
+            <div class="test-title">NEET SYSTEMIC EVALUATOR</div>
             <div class="timer-box" id="timer-display">03:00:00</div>
         </header>
 
@@ -405,7 +404,7 @@
 
             <main class="question-card">
                 <div id="badge-container"></div>
-                <div class="question-text" id="question-text">Acquiring item index configuration...</div>
+                <div class="question-text" id="question-text">Loading question canvas...</div>
                 
                 <div class="options-grid" id="options-container"></div>
 
@@ -416,10 +415,10 @@
             </main>
 
             <aside class="sidebar">
-                <div class="sidebar-title">Question Grid Index</div>
+                <div class="sidebar-title">Question Palette</div>
                 <div class="grid-container" id="question-grid"></div>
                 <div class="submit-panel">
-                    <button class="btn btn-submit" onclick="concludeExam(false)">Submit Examination Paper</button>
+                    <button class="btn btn-submit" onclick="concludeExam(false)">Submit Test</button>
                 </div>
             </aside>
         </div>
@@ -432,22 +431,23 @@
         <div class="results-grid">
             <div class="stat-card">
                 <div class="stat-val" id="res-score">0 / 720</div>
-                <div class="stat-lbl">Aggregate Score</div>
+                <div class="stat-lbl">Total Score</div>
             </div>
             <div class="stat-card">
                 <div class="stat-val" id="res-accuracy">0%</div>
-                <div class="stat-lbl">Response Accuracy</div>
+                <div class="stat-lbl">Accuracy Rate</div>
             </div>
         </div>
 
-        <h3>Cross-Subject Diagnostics</h3>
+        <h3>Subject Diagnostics</h3>
         <table class="analytics-table">
             <thead>
                 <tr>
-                    <th>Subject Disciplinary Group</th>
-                    <th>Score Metrics</th>
+                    <th>Subject</th>
+                    <th>Score</th>
                     <th>Correct / Wrong / Blank</th>
-                    <th>Avg Time Spent per Question</th>
+                    <th>Avg Time / Attempted Question</th>
+                    <th>Total Subject Time</th>
                 </tr>
             </thead>
             <tbody id="analytics-tbody"></tbody>
@@ -457,7 +457,7 @@
     <script>
         const SUBJECTS = ["Physics", "Chemistry", "Botany", "Zoology"];
         const TOTAL_QS = 45;
-        const AR_THRESHOLD = 41; // Index 41 to 44 (Last 4 questions)
+        const AR_THRESHOLD = 41; 
 
         let testStructure = [];
         let curSubIdx = 0;
@@ -467,63 +467,62 @@
         let timerTicker, engineTicker;
         let baseTimeMarker = 0;
 
-        // HIGHLY SPECIFIC SYLLABUS-BASED HARD QUESTIONS
-        // To build a true 180 question matrix cleanly, 5 high-yield targeted templates are generated dynamically across the 45 slots.
+        // DIRECT AND EASY NCERT STANDARD QUESTION BANK
         const SYLLABUS_BANK = {
             "Physics": [
-                { q: "A particle's position variation is expressed by x = 4t³ - 15t² + 12t - 4. Find the absolute acceleration of the particle at the precise operational timestamp when its velocity vector falls to zero.", o: ["3 m/s²", "9 m/s²", "18 m/s²", "12 m/s²"], c: 1 },
-                { q: "Evaluate the definite integral boundaries of the given expression: ∫₀^π (sin²x · cos x) dx.", o: ["1/3", "0", "-1/3", "2/3"], c: 1 },
-                { q: "Determine the coordinates of the global mathematical critical minimum point for the function variable set: y = 2x³ - 3x² - 12x + 6 within an open domain calculation.", o: ["x = 2", "x = -1", "x = 0", "x = 4"], c: 0 },
-                { q: "The angle of a physical vector system shifts over time following θ(t) = 4t² - 2t + 5. Compute the instantaneous derivative transformation rate for angular velocity (d²θ/dt²) at t = 10s.", o: ["78 rad/s²", "8 rad/s²", "38 rad/s²", "0 rad/s²"], c: 1 },
-                { q: "If dynamic position vectors trace a pathway given by S(t) = ∫ (6t² - 4t + 2) dt, and initialization states show S(0) = 5, calculate the exact relative location boundary at t = 2 seconds.", o: ["15 units", "17 units", "12 units", "21 units"], c: 1 }
+                { q: "If y = x⁴, then find the first derivative (dy/dx) with respect to x.", o: ["4x³", "3x⁴", "x³", "4x⁵"], c: 0 },
+                { q: "Evaluate the simple integration value: ∫ x² dx.", o: ["2x + C", "x³/3 + C", "3x³ + C", "x² + C"], c: 1 },
+                { q: "If y = sin(x), what is its derivative (dy/dx)?", o: ["-cos(x)", "cos(x)", "tan(x)", "-sin(x)"], c: 1 },
+                { q: "What is the value of the trigonometric ratio sin(30°)?", o: ["1", "√3/2", "1/2", "0"], c: 2 },
+                { q: "Find the value of dy/dx if y = 5x + 10.", o: ["5", "10", "0", "5x"], c: 0 }
             ],
             "Chemistry": [
-                { q: "An organic compound on analysis gave the following percentage composition: C = 57.8%, H = 3.6%, and O = 38.6%. If its vapor density is equal to 83, find the true absolute molecular formula code.", o: ["C₄H₃O₂", "C₈H₆O₄", "C₁₂H₉O₆", "C₂H₃O"], c: 1 },
-                { q: "Calculate the total volume of carbon dioxide gas evolved at standard temperature and pressure (STP) conditions when exactly 25.0 grams of 80% pure calcium carbonate is completely decomposed by thermal stress.", o: ["5.60 Liters", "4.48 Liters", "22.4 Liters", "11.2 Liters"], c: 1 },
-                { q: "A solution contains 4.0 grams of sodium hydroxide (NaOH) dissolved inside exactly 250 mL of total fluid aqueous system. Determine the precise molar concentration values of this matrix.", o: ["0.10 M", "0.40 M", "0.25 M", "1.00 M"], c: 1 },
-                { q: "How many total structural oxygen atoms are structurally embedded inside a drop of water weighing precisely 0.045 grams?", o: ["1.505 × 10²¹ atoms", "6.022 × 10²³ atoms", "3.011 × 10²² atoms", "1.505 × 10²² atoms"], c: 0 },
-                { q: "Suppose two distinct chemical elements X and Y combine to form compound variations X₂Y₃ and XY₂. If 0.10 moles of X₂Y₃ weighs 15.9g and 0.05 moles of XY₂ weighs 4.4g, evaluate atomic weights.", o: ["X = 26, Y = 18", "X = 56, Y = 16", "X = 40, Y = 16", "X = 14, Y = 32"], c: 1 }
+                { q: "What is the total number of particles present in exactly 1 mole of any chemical substance?", o: ["6.022 × 10²²", "6.022 × 10²³", "1.6 × 10⁻¹⁹", "3.14 × 10²³"], c: 1 },
+                { q: "Calculate the molecular mass of water (H₂O). (Given Atomic mass: H = 1u, O = 16u)", o: ["16 u", "18 u", "20 u", "32 u"], c: 1 },
+                { q: "How many moles of atoms are present in 24 grams of Magnesium? (Atomic mass of Mg = 24u)", o: ["1 mole", "2 moles", "0.5 mole", "1.5 moles"], c: 0 },
+                { q: "What is the volume occupied by 1 mole of any ideal gas at standard temperature and pressure (STP)?", o: ["11.2 Liters", "22.4 Liters", "44.8 Liters", "2.24 Liters"], c: 1 },
+                { q: "Molarity of a solution is fundamentally defined as:", o: ["Moles of solute per kg of solvent", "Moles of solute per Litre of solution", "Grams of solute per Litre of solvent", "Equivalents of solute per Litre of solution"], c: 1 }
             ],
             "Botany": [
-                { q: "A complex taxonomic strain exhibits peptidoglycan within cellular barriers, fixes atmospheric dinitrogen within specialized anaerobic heterocyst cells, and generates oxygenic photosynthetic systems. Identify its taxonomic alignment.", o: ["Chemoautotrophic Halophiles", "Cyanobacteria (Nostoc/Anabaena)", "Archaebacteria Methanogens", "Mycoplasma isolates"], c: 1 },
-                { q: "Which of the specified criteria is fundamentally prioritized as a defining operational parameter within modern biological classification schemes to establish a natural taxonomic outline?", o: ["Purely structural morphological traits", "Phylogenetic connections and evolutionary pathways", "Artificial tracking of single morphological structures", "Superficial habitat and color cataloging"], c: 1 },
-                { q: "An organism is isolated from a deep hydrothermal vent channel. It features cell membranes cross-linked via unique branched-chain ether lipids instead of standard ester linkages. Name its domain subset.", o: ["Eubacteria", "Cyanophyceae", "Archaebacteria", "Actinomycetes"], c: 2 },
-                { q: "Analyze the structural differences among Monerans. Select the specific group that lacks a cell wall completely and can easily survive in environments without oxygen.", o: ["Chlamydiae", "Mycoplasma", "Spirochaetes", "Nitrosomonas"], c: 1 },
-                { q: "Which taxonomic rank provides the least specific, widest group of shared physiological traits when moving down from Kingdom to Species levels?", o: ["Family", "Order", "Genus", "Division"], c: 3 }
+                { q: "Who is formally recognized as the legendary father of the modern biological binomial nomenclature system?", o: ["Aristotle", "Carolus Linnaeus", "Robert Whittaker", "Charles Darwin"], c: 1 },
+                { q: "In the scientific name Mangifera indica Linn, what does the word 'indica' precisely denote?", o: ["Genus name", "Specific epithet", "Family name", "Author citation"], c: 1 },
+                { q: "Organisms belonging to Kingdom Monera are fundamentally characterized by which cellular architecture?", o: ["Unicellular Eukaryotes", "Unicellular Prokaryotes", "Multicellular Eukaryotes", "Acellular entities"], c: 1 },
+                { q: "Which type of cell walls are uniquely characteristic of the true Eubacteria?", o: ["Cellulosic wall", "Peptidoglycan wall", "Chitinous wall", "Siliceous wall"], c: 1 },
+                { q: "Heterocysts are specialized cellular structures found in certain Cyanobacteria that carry out:", o: ["Photosynthesis", "Nitrogen Fixation", "Spore formation", "Fragmentation"], c: 1 }
             ],
             "Zoology": [
-                { q: "An animal specimen shows a true schizocoelomate organization body plane, explicit metameric segmentation along its long axis, and uses specialized nephridia networks for osmotic control. What is its phylum classification?", o: ["Aschelminthes", "Annelida", "Platyhelminthes", "Coelenterata"], c: 1 },
-                { q: "Identify the unique combination of structural features that correctly characterizes organisms belonging to Phylum Ctenophora.", o: ["Cnidocytes and dynamic gastrovascular system", "Comb plates with bioluminescent capability and lack of cnidocytes", "Flame cell networks paired with pseudocoelom", "Choanocytes with internal spicule arrays"], c: 1 },
-                { q: "An organism displays a triploblastic tissue profile but completely lacks any internal fluid body cavity space between the gut and body wall. Name its phylum bracket.", o: ["Aschelminthes", "Annelida", "Platyhelminthes", "Porifera"], c: 2 },
-                { q: "Which structural element is fundamentally unique to Phylum Porifera and helps maintain a continuous water flow system through their body canal walls?", o: ["Parapodia", "Cnidoblasts", "Choanocytes (Collar cells)", "Malpighian tubules"], c: 2 },
-                { q: "An intestinal parasite is discovered to have a pseudocoelom body cavity and an outer syncytial cuticle protective layer. Identify its classification.", o: ["Ascaris (Aschelminthes)", "Taenia (Platyhelminthes)", "Pheretima (Annelida)", "Fasciola (Platyhelminthes)"], c: 0 }
+                { q: "Which phylum is commonly and popularly referred to as the 'Sponges'?", o: ["Coelenterata", "Porifera", "Platyhelminthes", "Annelida"], c: 1 },
+                { q: "Flame cells are specialized excretory structures typically found in members of which phylum?", o: ["Platyhelminthes", "Aschelminthes", "Annelida", "Ctenophora"], c: 0 },
+                { q: "Which of the following organisms shows true, distinct metameric segmentation along its body?", o: ["Tapeworm", "Earthworm", "Roundworm", "Hydra"], c: 1 },
+                { q: "Cnidocytes (stinging cells) are a defining diagnostic feature of which animal phylum?", o: ["Porifera", "Ctenophora", "Coelenterata (Cnidaria)", "Annelida"], c: 2 },
+                { q: "Animals belonging to Phylum Aschelminthes (Roundworms) possess which type of internal body cavity layout?", o: ["True Coelom", "Pseudocoelom", "Acoelomate structure", "Schizocoelom"], c: 1 }
             ]
         };
 
         const AR_BANK = {
             "Physics": [
-                { q: "Assertion (A): The definite integral of a function across identical upper and lower boundaries (from x=a to x=a) always equals zero.\nReason (R): The area bounded under a curve without any horizontal movement along the x-axis has a width of zero.", c: 0 },
-                { q: "Assertion (A): If velocity equals zero at a certain point, acceleration must also be zero at that same instant.\nReason (R): Acceleration represents the rate of change of position over time.", c: 2 },
-                { q: "Assertion (A): The derivative of a constant value is zero.\nReason (R): A true constant represents a variable that maintains a steady value and does not change.", c: 0 },
-                { q: "Assertion (A): At points where a function reaches its local maximum, its first derivative equals zero.\nReason (R): The slope of a tangent line drawn at any local peak running along a continuous curve is horizontal.", c: 0 }
+                { q: "Assertion (A): The derivative of a constant function is always zero.\nReason (R): A constant function does not change its value as the independent variable changes.", c: 0 },
+                { q: "Assertion (A): The value of sin(0°) is equal to zero.\nReason (R): In a unit circle, the y-coordinate representing sine vanishes at an angle of zero degrees.", c: 0 },
+                { q: "Assertion (A): Integration is considered the reverse process of differentiation.\nReason (R): Finding an integral helps determine the original function when its rate of change is known.", c: 0 },
+                { q: "Assertion (A): The derivative of y = 2x with respect to x is simple 2.\nReason (R): The slope of a straight line equation is variable and changes at every point.", c: 2 }
             ],
             "Chemistry": [
-                { q: "Assertion (A): One mole of gaseous sulfur dioxide (SO₂) contains the same number of molecules as one mole of gaseous carbon dioxide (CO₂).\nReason (R): Equal volumes of all gases under identical temperature and pressure conditions contain equal numbers of molecules.", c: 1 },
-                { q: "Assertion (A): The empirical formula of glucose is CH₂O, while its molecular formula is C₆H₁₂O₆.\nReason (R): An empirical formula shows the simplest whole-number ratio of atoms in a compound, whereas a molecular formula shows the exact number of atoms present.", c: 0 },
-                { q: "Assertion (A): The molarity of a solution changes when the temperature of the fluid changes.\nReason (R): Molarity is defined based on mass variables that are independent of temperature.", c: 2 },
-                { q: "Assertion (A): Limiting reagents determine the theoretical yield of products in a chemical reaction.\nReason (R): The limiting reagent is the chemical substance that is present in the largest initial mass before a reaction begins.", c: 2 }
+                { q: "Assertion (A): One mole of Oxygen molecules contains 6.022 × 10²³ molecules.\nReason (R): A mole is an empirical unit that always represents a fixed collection of Avogadro's number of entities.", c: 0 },
+                { q: "Assertion (A): The molecular formula of a compound is always identical to its empirical formula.\nReason (R): Empirical formulas denote the simplest whole-number ratio of constituent atoms in a molecule.", c: 3 },
+                { q: "Assertion (A): Molarity of an aqueous solution changes with shifts in environmental temperature.\nReason (R): Liquid volume increases or decreases due to thermal expansion, altering concentration math.", c: 0 },
+                { q: "Assertion (A): 18 grams of water sample represents exactly 1 mole of water molecules.\nReason (R): The molar mass value of water is 18 grams per mole.", c: 0 }
             ],
             "Botany": [
-                { q: "Assertion (A): Archaebacteria can survive in extreme environments like hot springs and deep hydrothermal vents.\nReason (R): Archaebacteria possess a specialized cell wall structure that lacks peptidoglycan and contains unique branched-chain lipids.", c: 0 },
-                { q: "Assertion (A): Biological classification categories follow a fixed hierarchical system from Kingdom down to Species.\nReason (R): As you move down from Kingdom to Species, the number of shared characteristics decreases.", c: 2 },
-                { q: "Assertion (A): Cyanobacteria are classified under Kingdom Monera and are often referred to as blue-green algae.\nReason (R): Cyanobacteria are prokaryotic organisms that contain chlorophyll-a and can perform oxygenic photosynthesis.", c: 1 },
-                { q: "Assertion (A): Mycoplasmas are highly resistant to standard penicillin treatments.\nReason (R): Penicillin targets cell wall synthesis, and Mycoplasmas naturally lack a cell wall.", c: 0 }
+                { q: "Assertion (A): Cyanobacteria are commonly called blue-green algae but belong to Kingdom Monera.\nReason (R): Cyanobacteria lack a nuclear membrane and have a prokaryotic cell organization.", c: 0 },
+                { q: "Assertion (A): Binomial nomenclature uses two words to name an organism scientifically.\nReason (R): The first word denotes the species name, and the second word specifies the generic name.", c: 2 },
+                { q: "Assertion (A): Mycoplasmas are prokaryotes that completely lack a cell wall.\nReason (R): Because they lack a cell wall, they can easily alter their shape and are pleomorphic.", c: 0 },
+                { q: "Assertion (A): Linnaeus established the five-kingdom system of classification.\nReason (R): The five kingdoms are Monera, Protista, Fungi, Plantae, and Animalia.", c: 3 }
             ],
             "Zoology": [
-                { q: "Assertion (A): Organisms in Phylum Platyhelminthes are described as flatworms and are dorsoventrally flattened.\nReason (R): These animals are triploblastic, acoelomate organisms with an organ-system level of organization.", c: 1 },
-                { q: "Assertion (A): Metameric segmentation is a key distinguishing feature of Phylum Annelida.\nReason (R): The bodies of annelids are divided externally and internally into segments, with a serial repetition of at least some organs.", c: 0 },
-                { q: "Assertion (A): Phylum Ctenophora is separate from Phylum Coelenterata.\nReason (R): Ctenophores lack specialized cnidocytes and move using eight rows of ciliated comb plates.", c: 0 },
-                { q: "Assertion (A): Members of Phylum Porifera remain attached to a substrate and do not show locomotive movement as adults.\nReason (R): Sponges possess a unique water transport canal system lined with flagellated choanocytes.", c: 1 }
+                { q: "Assertion (A): Sponges exhibit a cellular level of body organization.\nReason (R): In Porifera, cells are loosely arranged as aggregates without forming distinct tissues.", c: 0 },
+                { q: "Assertion (A): Flatworms are grouped within Phylum Platyhelminthes.\nReason (R): Their body is dorsoventrally flattened.", c: 0 },
+                { q: "Assertion (A): Earthworms are coelomate animals.\nReason (R): They possess a fluid-filled cavity entirely lined by mesodermal tissue sheets.", c: 0 },
+                { q: "Assertion (A): Roundworms show complete metameric segmentation.\nReason (R): Their body appears cylindrical and tapered at both ends.", c: 3 }
             ]
         };
 
@@ -555,7 +554,7 @@
                         questionsList.push({
                             id: i,
                             type: "MCQ",
-                            question: `[Q-${i+1}] ${template.q} (Variant Modification ${Math.floor(i/pool.length)+1})`,
+                            question: `[Q-${i+1}] ${template.q}`,
                             options: [...template.o],
                             correctIndex: template.c,
                             userAnswer: null,
@@ -688,7 +687,7 @@
         }
 
         function concludeExam(forced = false) {
-            if (!forced && !confirm("Do you wish to submit and finalize your examination sheets?")) return;
+            if (!forced && !confirm("Do you wish to submit your test answers for final evaluation?")) return;
             
             clearInterval(timerTicker);
             clearInterval(engineTicker);
@@ -697,6 +696,12 @@
             document.getElementById('result-screen').classList.remove('hidden');
             
             processFinalScores();
+        }
+
+        function formatTime(totalSeconds) {
+            let mm = Math.floor(totalSeconds / 60);
+            let ss = Math.floor(totalSeconds % 60);
+            return `${mm}m ${ss}s`;
         }
 
         function processFinalScores() {
@@ -709,13 +714,15 @@
             testStructure.forEach(sub => {
                 let c = 0, w = 0, b = 0;
                 let subScore = 0;
-                let totalTime = 0;
+                let totalTimeOnSubject = 0;
+                let totalAttemptedInSubject = 0;
 
                 sub.questions.forEach(q => {
-                    totalTime += q.timeSpent;
+                    totalTimeOnSubject += q.timeSpent;
                     if (q.userAnswer === null) {
                         b++;
                     } else {
+                        totalAttemptedInSubject++;
                         attemptedCount++;
                         if (q.userAnswer === q.correctIndex) {
                             c++;
@@ -729,16 +736,17 @@
                 });
 
                 totalScore += subScore;
-                let avgT = totalTime / TOTAL_QS;
-                let mm = Math.floor(avgT / 60);
-                let ss = Math.floor(avgT % 60);
+                
+                // Calculates time divided exclusively by the questions you interacted with or solved.
+                let avgTimePerQuestion = totalAttemptedInSubject > 0 ? (totalTimeOnSubject / totalAttemptedInSubject) : 0;
 
                 let tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td><strong>${sub.name}</strong></td>
                     <td>${subScore} / 180</td>
                     <td><span style="color:green">${c}C</span> / <span style="color:red">${w}W</span> / <span style="color:gray">${b}B</span></td>
-                    <td><strong>${mm}m ${ss}s / question</strong></td>
+                    <td><strong>${totalAttemptedInSubject > 0 ? formatTime(avgTimePerQuestion) : '0m 0s'} / q</strong></td>
+                    <td>${formatTime(totalTimeOnSubject)}</td>
                 `;
                 tableBody.appendChild(tr);
             });
