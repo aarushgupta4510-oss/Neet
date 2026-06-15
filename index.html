@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEET Standard Mock Test Portal</title>
+    <title>NEET Standard 180-Q Practice Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -34,7 +34,7 @@
         .hidden { display: none !important; }
 
         .container {
-            max-width: 850px;
+            max-width: 900px;
             margin: 50px auto;
             padding: 40px;
             background: var(--surface);
@@ -371,31 +371,72 @@
             background: #F1F5F9;
             color: var(--primary);
         }
+
+        /* REVIEW SECTION WORK */
+        .review-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px dashed var(--border);
+        }
+
+        .review-title {
+            color: #DC2626;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+
+        .review-card {
+            background: #FFFDFD;
+            border: 1px solid #FEE2E2;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .review-card.blank-card {
+            background: #F8FAFC;
+            border-color: #E2E8F0;
+        }
+
+        .review-q-header {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .review-details {
+            font-size: 0.9rem;
+            margin-top: 8px;
+        }
+
+        .text-wrong { color: #DC2626; font-weight: 600; }
+        .text-correct { color: #059669; font-weight: 600; }
+        .text-blank { color: #475569; font-weight: 600; }
     </style>
 </head>
 <body>
 
     <div id="intro-screen" class="container">
-        <h1>NEET Standard Practice Mock</h1>
-        <p class="subtitle">NCERT-Aligned Concept Assessment Portal</p>
+        <h1>NEET Complete 180-Question Evaluator</h1>
+        <p class="subtitle">Fully Populated Master Mock — 100% Unique Questions Matrix</p>
         
         <div class="rules-card">
-            <h3>Test Rules & Guidelines:</h3>
+            <h3>Test Setup Specifications:</h3>
             <ul>
-                <li><strong>Questions Structure:</strong> 4 Subjects × 45 Questions = 180 Questions Total.</li>
-                <li><strong>Marking System:</strong> +4 for Correct answers, -1 for Wrong answers, 0 for Blank entries. Max Marks: 720.</li>
-                <li><strong>Timing Integration:</strong> 3-Hour Countdown. The results page tracks and provides the exact average time you took per <em>attempted</em> question for each subject.</li>
+                <li><strong>No Question Repetition:</strong> Every single one of the 180 slots contains a unique structural question. No loops or basic place-holders.</li>
+                <li><strong>Marking parameters:</strong> Standard NEET setup (+4 for correct, -1 for incorrect, 0 for omitted questions).</li>
+                <li><strong>Correction Ledger:</strong> Complete analysis mapping showing exactly which questions you got wrong or left unattempted with answers displayed at the finish screen.</li>
             </ul>
             <div class="syllabus-box">
-                <strong>Syllabus Scope:</strong> Physics (Basic Math Tools) | Chemistry (Basic Concepts & Mole Concept) | Botany (Living World & Biological Classification to Monera) | Zoology (Animal Kingdom up to Annelids).
+                <strong>Syllabus Scope:</strong> Physics (Basic Math & Vectors Tools) | Chemistry (Mole Concept Basics) | Botany (Living World & Classification to Monera) | Zoology (Animal Kingdom up to Annelids).
             </div>
         </div>
-        <button class="btn" onclick="startExamPortal()">Start Mock Test</button>
+        <button class="btn" onclick="startExamPortal()">Launch Mock Examination</button>
     </div>
 
     <div id="exam-screen" class="hidden">
         <header class="test-header">
-            <div class="test-title">NEET SYSTEMIC EVALUATOR</div>
+            <div class="test-title">NEET COMPREHENSIVE PRACTICE SYSTEM</div>
             <div class="timer-box" id="timer-display">03:00:00</div>
         </header>
 
@@ -404,7 +445,7 @@
 
             <main class="question-card">
                 <div id="badge-container"></div>
-                <div class="question-text" id="question-text">Loading question canvas...</div>
+                <div class="question-text" id="question-text">Assembling database cells...</div>
                 
                 <div class="options-grid" id="options-container"></div>
 
@@ -418,7 +459,7 @@
                 <div class="sidebar-title">Question Palette</div>
                 <div class="grid-container" id="question-grid"></div>
                 <div class="submit-panel">
-                    <button class="btn btn-submit" onclick="concludeExam(false)">Submit Test</button>
+                    <button class="btn btn-submit" onclick="concludeExam(false)">Submit Examination Paper</button>
                 </div>
             </aside>
         </div>
@@ -452,6 +493,14 @@
             </thead>
             <tbody id="analytics-tbody"></tbody>
         </table>
+
+        <div class="review-section">
+            <h3 class="review-title">Review Ledger (Incorrect & Omitted Items Only)</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">
+                Review all the questions you either answered incorrectly or left unattempted below to fix your weak concepts.
+            </p>
+            <div id="review-cards-container"></div>
+        </div>
     </div>
 
     <script>
@@ -467,35 +516,179 @@
         let timerTicker, engineTicker;
         let baseTimeMarker = 0;
 
-        // DIRECT AND EASY NCERT STANDARD QUESTION BANK
-        const SYLLABUS_BANK = {
+        // 100% EXPLICITLY GENERATED UNIQUE 41 QUESTIONS PER SUBJECT (EXCLUDING THE 4 ARs)
+        const MASTER_RAW_BANK = {
             "Physics": [
-                { q: "If y = x⁴, then find the first derivative (dy/dx) with respect to x.", o: ["4x³", "3x⁴", "x³", "4x⁵"], c: 0 },
-                { q: "Evaluate the simple integration value: ∫ x² dx.", o: ["2x + C", "x³/3 + C", "3x³ + C", "x² + C"], c: 1 },
-                { q: "If y = sin(x), what is its derivative (dy/dx)?", o: ["-cos(x)", "cos(x)", "tan(x)", "-sin(x)"], c: 1 },
-                { q: "What is the value of the trigonometric ratio sin(30°)?", o: ["1", "√3/2", "1/2", "0"], c: 2 },
-                { q: "Find the value of dy/dx if y = 5x + 10.", o: ["5", "10", "0", "5x"], c: 0 }
+                {q: "Find the derivative of y = x⁵ with respect to x.", o: ["5x⁴", "4x⁵", "5x³", "x⁴"], c: 0},
+                {q: "If y = 3x² + 2x + 5, find dy/dx.", o: ["6x + 2", "3x + 2", "6x² + 2", "6x"], c: 0},
+                {q: "Find the value of the integral ∫ 2x dx.", o: ["x² + C", "2x² + C", "x + C", "2 + C"], c: 0},
+                {q: "What is the derivative of y = cos(x)?", o: ["sin(x)", "-sin(x)", "cos(x)", "-cos(x)"], c: 1},
+                {q: "Evaluate the definite integral: ∫₁³ 3x² dx.", o: ["26", "27", "28", "25"], c: 0},
+                {q: "If y = ln(x), then what is the value of dy/dx?", o: ["1/x", "e^x", "1", "x"], c: 0},
+                {q: "Find the value of sin(60°).", o: ["1/2", "√3/2", "1/√2", "1"], c: 1},
+                {q: "Find the derivative of y = e^x.", o: ["e^x", "x e^(x-1)", "1/e^x", "e^x / x"], c: 0},
+                {q: "If y = tan(x), find dy/dx.", o: ["sec(x)", "sec²(x)", "cot(x)", "-sec²(x)"], c: 1},
+                {q: "Evaluate the integral: ∫ sin(x) dx.", o: ["cos(x) + C", "-cos(x) + C", "sin(x) + C", "-sin(x) + C"], c: 1},
+                {q: "What is the value of cos(45°)?", o: ["1/2", "√3/2", "1/√2", "0"], c: 2},
+                {q: "Find the derivative of y = 4x³.", o: ["12x²", "4x²", "12x³", "3x²"], c: 0},
+                {q: "Find the integral of a constant k with respect to x: ∫ k dx.", o: ["k + C", "kx + C", "k²x + C", "0"], c: 1},
+                {q: "If displacement is given by s = 2t² + t, find the instantaneous velocity at t = 2s.", o: ["8 m/s", "9 m/s", "5 m/s", "10 m/s"], c: 1},
+                {q: "Velocity of a body is v = 3t². Find the acceleration at t = 3s by differentiation.", o: ["9 m/s²", "18 m/s²", "27 m/s²", "6 m/s²"], c: 1},
+                {q: "Find the value of tan(45°).", o: ["0", "1", "√3", "1/√3"], c: 1},
+                {q: "Find the derivative of y = 1/x.", o: ["-1/x²", "1/x²", "ln(x)", "-1/x"], c: 0},
+                {q: "Evaluate the definite integral: ∫₀² x dx.", o: ["1", "2", "3", "4"], c: 1},
+                {q: "If y = 7x - 3, find its derivative.", o: ["7", "7x", "0", "-3"], c: 0},
+                {q: "Find the derivative of y = sin(2x).", o: ["2 cos(2x)", "cos(2x)", "-2 cos(2x)", "2 sin(2x)"], c: 0},
+                {q: "Evaluate the integral: ∫ cos(x) dx.", o: ["sin(x) + C", "-sin(x) + C", "cos(x) + C", "tan(x) + C"], c: 0},
+                {q: "What is the value of cos(90°)?", o: ["1", "0", "-1", "1/2"], c: 1},
+                {q: "Find the value of dy/dx if y = x² + x³.", o: ["2x + 3x²", "x + x²", "2x³", "5x⁴"], c: 0},
+                {q: "Evaluate the integral: ∫ e^x dx.", o: ["e^x + C", "xe^x + C", "e^(x+1) + C", "1"], c: 0},
+                {q: "If a particle moves according to x = t³, find its acceleration function.", o: ["3t²", "6t", "6", "3t"], c: 1},
+                {q: "Find the value of sin(0°).", o: ["0", "1", "-1", "1/2"], c: 0},
+                {q: "Find the derivative of y = 10.", o: ["10", "1", "0", "10x"], c: 2},
+                {q: "Evaluate the integral: ∫ x³ dx.", o: ["3x² + C", "x⁴/4 + C", "4x⁴ + C", "x³ + C"], c: 1},
+                {q: "Find the value of tan(30°).", o: ["√3", "1", "1/√3", "0"], c: 2},
+                {q: "If y = 5cos(x), find dy/dx.", o: ["5sin(x)", "-5sin(x)", "-sin(x)", "5"], c: 1},
+                {q: "Evaluate the definite integral: ∫₁² 4x dx.", o: ["4", "6", "8", "12"], c: 1},
+                {q: "Find the derivative of y = x^(-2).", o: ["-2x^(-3)", "-2x^(-1)", "2x³", "-x^(-1)"], c: 0},
+                {q: "Find the value of cos(60°).", o: ["1/2", "√3/2", "1/√2", "0"], c: 0},
+                {q: "Evaluate the integral: ∫ 5 dx.", o: ["5x + C", "5 + C", "5x² + C", "0"], c: 0},
+                {q: "If velocity is v = 4t + 2, find displacement change from t=0 to t=2s via integration.", o: ["10 units", "12 units", "8 units", "14 units"], c: 1},
+                {q: "Find the slope of y = x² at x = 3.", o: ["3", "6", "9", "2"], c: 1},
+                {q: "Find the derivative of y = √x.", o: ["1/(2√x)", "2√x", "1/√x", "x^(3/2)"], c: 0},
+                {q: "What is the value of sin(90°)?", o: ["0", "1", "1/2", "-1"], c: 1},
+                {q: "Find the derivative of y = 3x⁴.", o: ["12x³", "3x³", "12x²", "4x³"], c: 0},
+                {q: "Evaluate the definite integral: ∫₀¹ e^x dx.", o: ["e", "e - 1", "1", "e + 1"], c: 1},
+                {q: "If y = sin(x) + cos(x), find dy/dx.", o: ["cos(x) - sin(x)", "cos(x) + sin(x)", "-cos(x) + sin(x)", "0"], c: 0}
             ],
             "Chemistry": [
-                { q: "What is the total number of particles present in exactly 1 mole of any chemical substance?", o: ["6.022 × 10²²", "6.022 × 10²³", "1.6 × 10⁻¹⁹", "3.14 × 10²³"], c: 1 },
-                { q: "Calculate the molecular mass of water (H₂O). (Given Atomic mass: H = 1u, O = 16u)", o: ["16 u", "18 u", "20 u", "32 u"], c: 1 },
-                { q: "How many moles of atoms are present in 24 grams of Magnesium? (Atomic mass of Mg = 24u)", o: ["1 mole", "2 moles", "0.5 mole", "1.5 moles"], c: 0 },
-                { q: "What is the volume occupied by 1 mole of any ideal gas at standard temperature and pressure (STP)?", o: ["11.2 Liters", "22.4 Liters", "44.8 Liters", "2.24 Liters"], c: 1 },
-                { q: "Molarity of a solution is fundamentally defined as:", o: ["Moles of solute per kg of solvent", "Moles of solute per Litre of solution", "Grams of solute per Litre of solvent", "Equivalents of solute per Litre of solution"], c: 1 }
+                {q: "What is the mass of 1 mole of Carbon atoms?", o: ["12 grams", "1 gram", "6 grams", "14 grams"], c: 0},
+                {q: "How many molecules are contained in 18g of water (H₂O)?", o: ["6.022 × 10²²", "6.022 × 10²³", "3.011 × 10²³", "1.2 × 10²⁴"], c: 1},
+                {q: "What is the molar mass of Carbon Dioxide (CO₂)?", o: ["28 g/mol", "32 g/mol", "44 g/mol", "56 g/mol"], c: 2},
+                {q: "What volume does 1 mole of oxygen gas occupy at STP conditions?", o: ["11.2 L", "22.4 L", "44.8 L", "5.6 L"], c: 1},
+                {q: "How many moles of molecules are present in 44 grams of CO² gas?", o: ["1 mole", "2 moles", "0.5 mole", "1.5 moles"], c: 0},
+                {q: "Identify the absolute value of Avogadro's constant.", o: ["6.022 × 10²³ mol⁻¹", "1.6 × 10⁻¹⁹ mol⁻¹", "9.1 × 10⁻³¹ mol⁻¹", "6.022 × 10²² mol⁻¹"], c: 0},
+                {q: "Calculate the formula mass of Sodium Chloride (NaCl). (Na=23, Cl=35.5)", o: ["58.5 u", "40 u", "74.5 u", "50 u"], c: 0},
+                {q: "How many atoms are in 1 mole of monoatomic Helium gas?", o: ["6.022 × 10²³ atoms", "1.204 × 10²⁴ atoms", "3.011 × 10²³ atoms", "6.022 × 10²² atoms"], c: 0},
+                {q: "What is the mass of 0.5 moles of water (H₂O)?", o: ["9 grams", "18 grams", "36 grams", "4.5 grams"], c: 0},
+                {q: "How many moles of Hydrogen atoms are present in 1 mole of CH₄ molecules?", o: ["1 mole", "2 moles", "4 moles", "5 moles"], c: 2},
+                {q: "What is the standard molar volume of hydrogen gas at STP?", o: ["22.4 L", "11.2 L", "44.8 L", "24 L"], c: 0},
+                {q: "Calculate the number of moles in 16 grams of Oxygen gas (O₂).", o: ["1 mole", "0.5 mole", "2 moles", "0.25 mole"], c: 1},
+                {q: "The empirical formula of hydrogen peroxide (H₂O₂) is:", o: ["HO", "H₂O", "HO₂", "H₂O₂"], c: 0},
+                {q: "Which expression represents Molarity mathematically?", o: ["Moles of solute / Liters of solution", "Moles of solute / kg of solvent", "Mass of solute / Mass of solution", "Liters of solute / Moles of solution"], c: 0},
+                {q: "What is the molecular mass of Glucose (C₆H₁₂O₆)?", o: ["180 u", "342 u", "90 u", "120 u"], c: 0},
+                {q: "How many moles of nitrogen atoms are present in 28g of Nitrogen gas (N₂)?", o: ["1 mole", "2 moles", "0.5 mole", "14 moles"], c: 1},
+                {q: "What is the mass of 2 moles of Sodium Hydroxide (NaOH)? (Na=23, O=16, H=1)", o: ["40 g", "80 g", "60 g", "20 g"], c: 1},
+                {q: "The number of moles of solute dissolved per kilogram of solvent is called:", o: ["Molarity", "Molality", "Normality", "Mole fraction"], c: 1},
+                {q: "How many moles of CO₂ are produced by burning 1 mole of Carbon completely in oxygen?", o: ["1 mole", "2 moles", "0.5 mole", "3 moles"], c: 0},
+                {q: "What is the percentage of Oxygen by mass in water (H₂O)?", o: ["11.1%", "88.9%", "50%", "16%"], c: 1},
+                {q: "How many total moles of atoms are present in 1 mole of H₂SO₄ molecules?", o: ["3 moles", "5 moles", "7 moles", "6 moles"], c: 2},
+                {q: "Calculate the mass of 3 moles of Ammonia (NH₃). (N=14, H=1)", o: * 17, 51, 34, 45, c: 1},
+                {q: "What volume is occupied by 4.4g of CO₂ gas at STP conditions?", o: ["2.24 L", "4.48 L", "22.4 L", "1.12 L"], c: 0},
+                {q: "An organic compound has empirical formula CH₂ and molecular mass 42. What is its molecular formula?", o: ["CH₂", "C₂H₄", "C₃H₆", "C₄H₈"], c: 2},
+                {q: "The sum of mole fractions of all components in a multi-component solution is always:", o: ["0", "0.5", "1", "Variable"], c: 2},
+                {q: "How many molecules are present in 2.0 moles of any ideal gas?", o: ["6.022 × 10²³", "1.204 × 10²⁴", "3.011 × 10²³", "2.4 × 10²⁴"], c: 1},
+                {q: "What is the mass of 11.2 Liters of O₂ gas at STP?", o: ["16 grams", "32 grams", "8 grams", "64 grams"], c: 0},
+                {q: "How many moles of electrons constitute exactly one Faraday of electric charge?", o: ["1 mole", "2 moles", "6.022 × 10²³ moles", "0.5 mole"], c: 0},
+                {q: "Calculate the percentage of Calcium by mass in CaCO₃. (Ca=40, C=12, O=16)", o: ["40%", "12%", "48%", "50%"], c: 0},
+                {q: "What is the weight of one atom of Hydrogen approximately?", o: ["1.66 × 10⁻²⁴ g", "1.0 g", "6.022 × 10⁻²³ g", "1.66 × 10⁻²³ g"], c: 0},
+                {q: "How many grams of NaOH are needed to prepare 1 Litre of a 1M solution?", o: ["40 g", "20 g", "4 g", "80 g"], c: 0},
+                {q: "Which property among the following changes its numeric value with a change in temperature?", o: ["Molality", "Mole fraction", "Molarity", "Mass percentage"], c: 2},
+                {q: "What is the empirical formula of benzene (C₆H₆)?", o: ["CH", "C₂H₂", "C₃H₃", "C₆H₆"], c: 0},
+                {q: "How many hydrogen atoms are present in 1 mole of Ammonia (NH₃)?", o: ["3 × 6.022 × 10²³", "6.022 × 10²³", "1.8 × 10²³", "3 atoms"], c: 0},
+                {q: "What is the weight of 22.4 Liters of N₂ gas at STP conditions?", o: ["14 g", "28 g", "7 g", "56 g"], c: 1},
+                {q: "Calculate the number of moles of water in 90g of pure water sample.", o: ["5 moles", "10 moles", "2.5 moles", "1 mole"], c: 0},
+                {q: "The number of gold atoms present in 1 gram of gold is maximum compared to other substances due to its atomic weight.", o: ["True", "False, it is minimum due to high molar mass", "Equal", "Cannot say"], c: 1},
+                {q: "What is the molar mass of Ethanol (C₂H₅OH)?", o: ["46 g/mol", "32 g/mol", "60 g/mol", "44 g/mol"], c: 0},
+                {q: "How many moles of oxygen atoms are present in 4 moles of Nitric acid (HNO₃)?", o: ["3 moles", "12 moles", "4 moles", "6 moles"], c: 1},
+                {q: "What mass of Magnesium contains the same number of atoms as 12g of Carbon?", o: ["24 g", "12 g", "6 g", "48 g"], c: 0},
+                {q: "The composition of a compound is always fixed by mass according to which basic law?", o: ["Law of Definite Proportions", "Law of Multiple Proportions", "Law of Conservation of Mass", "Avogadro's Law"], c: 0}
             ],
             "Botany": [
-                { q: "Who is formally recognized as the legendary father of the modern biological binomial nomenclature system?", o: ["Aristotle", "Carolus Linnaeus", "Robert Whittaker", "Charles Darwin"], c: 1 },
-                { q: "In the scientific name Mangifera indica Linn, what does the word 'indica' precisely denote?", o: ["Genus name", "Specific epithet", "Family name", "Author citation"], c: 1 },
-                { q: "Organisms belonging to Kingdom Monera are fundamentally characterized by which cellular architecture?", o: ["Unicellular Eukaryotes", "Unicellular Prokaryotes", "Multicellular Eukaryotes", "Acellular entities"], c: 1 },
-                { q: "Which type of cell walls are uniquely characteristic of the true Eubacteria?", o: ["Cellulosic wall", "Peptidoglycan wall", "Chitinous wall", "Siliceous wall"], c: 1 },
-                { q: "Heterocysts are specialized cellular structures found in certain Cyanobacteria that carry out:", o: ["Photosynthesis", "Nitrogen Fixation", "Spore formation", "Fragmentation"], c: 1 }
+                {q: "What is the basic unit of biological classification hierarchies?", o: ["Species", "Genus", "Family", "Kingdom"], c: 0},
+                {q: "Who introduced the binomial nomenclature system globally?", o: ["Carolus Linnaeus", "Aristotle", "John Ray", "Ernst Mayr"], c: 0},
+                {q: "In Mangifera indica, the first term Mangifera represents which rank?", o: ["Genus", "Species", "Order", "Family"], c: 0},
+                {q: "Which classification kingdom contains all unicellular prokaryotes?", o: ["Monera", "Protista", "Fungi", "Plantae"], c: 0},
+                {q: "What is the primary chemical component of Eubacterial cell walls?", o: ["Peptidoglycan", "Cellulose", "Chitin", "Pectin"], c: 0},
+                {q: "Cyanobacteria are commonly known by what name?", o: ["Blue-green algae", "Red algae", "Brown algae", "Slime molds"], c: 0},
+                {q: "Name the unique cells used by Cyanobacteria for fixing atmospheric nitrogen.", o: ["Heterocysts", "Akinetes", "Auxospores", "Trichomes"], c: 0},
+                {q: "Which Monerans are characterized by the absolute absence of a cell wall?", o: ["Mycoplasma", "Nostoc", "Oscillatoria", "Rhizobium"], c: 0},
+                {q: "Who proposed the comprehensive Five Kingdom Classification system?", o: ["R.H. Whittaker", "Carolus Linnaeus", "Aristotle", "Carl Woese"], c: 0},
+                {q: "Which structural rank comes immediately below Kingdom in botanical classification?", o: ["Division", "Phylum", "Class", "Order"], c: 0},
+                {q: "The evolutionary histories and relationships of organisms are called:", o: ["Phylogeny", "Ontogeny", "Morphology", "Anatomy"], c: 0},
+                {q: "What is the repository of preserved plant specimens dried and pressed on sheets called?", o: ["Herbarium", "Botanical Garden", "Museum", "Zoological Park"], c: 0},
+                {q: "ICBN stands for which of the following terms?", o: ["International Code for Botanical Nomenclature", "Indian Code of Botanical Nomenclature", "International Council for Botanical Nomenclature", "International Code of Biogeography Nomenclature"], c: 0},
+                {q: "Bacteria that live in extreme saline environments are categorized as:", o: ["Halophiles", "Thermoacidophiles", "Methanogens", "Cyanobacteria"], c: 0},
+                {q: "Methanogens are abundantly present inside which habitat?", o: ["Guts of ruminant animals", "Hot springs", "Deep oceans", "Marshy salty areas"], c: 0},
+                {q: "Which kingdom includes organisms with cell walls containing peptidoglycan and lacking a nucleus?", o: ["Monera", "Protista", "Fungi", "Plantae"], c: 0},
+                {q: "The non-cellulosic cell wall of Monerans is made of:", o: ["Polysaccharides + amino acids", "Pure cellulose", "Chitin only", "Lipids only"], c: 0},
+                {q: "Which organisms are known as the jokers of the plant kingdom due to pleomorphism?", o: ["Mycoplasma", "Bacteria", "Viruses", "Cyanobacteria"], c: 0},
+                {q: "A taxonomic key is used for the explicit purpose of:", o: ["Identification of plants and animals", "Conserving endangered species", "Naming new species", "Pressing herbarium sheets"], c: 0},
+                {q: "Which of the following is a non-living attribute often shared with living systems?", o: ["Growth by accumulation of mass externally", "Metabolism", "Reproduction", "Consciousness"], c: 0},
+                {q: "The suffix '-aceae' always denotes which taxonomic category in plants?", o: ["Family", "Order", "Class", "Cohort"], c: 0},
+                {q: "In a botanical scientific name, the author's citation name is printed in:", o: ["Roman script abbreviated at the end", "Italics at the start", "Underlined bold format", "Parenthesis before genus"], c: 0},
+                {q: "Which bacteria are highly famous for producing biogas in anaerobic digesters?", o: ["Methanogens", "Halophiles", "Sulfonolipids", "Cyanobacteria"], c: 0},
+                {q: "Nostoc and Anabaena belong to which major bacterial sub-group?", o: ["Cyanobacteria", "Archaebacteria", "Mycoplasma", "Actinomycetes"], c: 0},
+                {q: "The process of breakdown of complex chemicals by living organisms inside cells is called:", o: ["Metabolism", "Anabolism", "Catabolism", "Growth"], c: 0},
+                {q: "Which taxonomic tool contains actual accounts of habitat and distribution of plants of a given area?", o: ["Flora", "Manuals", "Monographs", "Catalogues"], c: 0},
+                {q: "A monograph provides comprehensive biological data about:", o: ["Any one taxon", "A specific geographical zone flora", "All families of plants", "Rules of naming"], c: 0},
+                {q: "What form of genetic material is typically found free in the cytoplasm of a Moneran cell?", o: ["Naked circular double-stranded DNA", "Linear DNA with histones", "Single-stranded RNA only", "Enclosed double membrane DNA"], c: 0},
+                {q: "Bacteria that oxidize inorganic substances like nitrates to get energy are:", o: ["Chemoautotrophs", "Photoautotrophs", "Saprophytes", "Parasites"], c: 0},
+                {q: "Which of the following exhibits consciousness as a defining technical feature?", o: ["All living organisms", "Humans only", "Animals only", "Plants only"], c: 0},
+                {q: "The scientific term used for classification categories or ranks is:", o: ["Taxon", "Cohort", "Phylum", "Tribe"], c: 0},
+                {q: "Arrange the order correctly from lowest to highest rank: Species, Genus, Family...", o: ["Species -> Genus -> Family", "Family -> Genus -> Species", "Genus -> Species -> Family", "Species -> Family -> Genus"], c: 0},
+                {q: "Archaebacteria differ from Eubacteria mainly in their:", o: ["Cell wall structure and lipid linkages", "Mode of nutrition", "Presence of flagella", "Prokaryotic nature"], c: 0},
+                {q: "Which moneran causes dynamic systemic diseases in plants and lacks cell walls?", o: ["Mycoplasma", "Cyanobacteria", "Spirillum", "Gram positive cocci"], c: 0},
+                {q: "The mode of nutrition in majority of the heterotrophic bacteria is:", o: ["Saprophytic or parasitic", "Photosynthetic", "Chemosynthetic", "Holozoic"], c: 0},
+                {q: "How many kingdoms in Whittaker's system contain prokaryotes?", o: ["One", "Two", "Three", "Four"], c: 0},
+                {q: "Which classification system was based purely on gross superficial morphological characters?", o: ["Artificial system", "Natural system", "Phylogenetic system", "Phenetic system"], c: 0},
+                {q: "The true defining property of living organisms without any exception is:", o: ["Metabolism / Cellular organization", "Intrinsic growth", "Reproduction", "Locomotion"], c: 0},
+                {q: "In houses of plant taxonomy, a collection of single monographs covers what scope?", o: ["Comprehensive view of one structural taxon", "Local flora index", "Nomenclature amendments", "Author index data"], c: 0},
+                {q: "Which organism performs oxygenic photosynthesis just like higher green plants?", o: ["Cyanobacteria", "Chlorobium", "Chromatium", "Rhodospirillum"], c: 0},
+                {q: "The cell wall structure of Archaebacteria helps them survive under extreme heat conditions.", o: ["True", "False, it is the plasma membrane composition alone", "They have no cell wall", "They don't survive heat"], c: 0}
             ],
             "Zoology": [
-                { q: "Which phylum is commonly and popularly referred to as the 'Sponges'?", o: ["Coelenterata", "Porifera", "Platyhelminthes", "Annelida"], c: 1 },
-                { q: "Flame cells are specialized excretory structures typically found in members of which phylum?", o: ["Platyhelminthes", "Aschelminthes", "Annelida", "Ctenophora"], c: 0 },
-                { q: "Which of the following organisms shows true, distinct metameric segmentation along its body?", o: ["Tapeworm", "Earthworm", "Roundworm", "Hydra"], c: 1 },
-                { q: "Cnidocytes (stinging cells) are a defining diagnostic feature of which animal phylum?", o: ["Porifera", "Ctenophora", "Coelenterata (Cnidaria)", "Annelida"], c: 2 },
-                { q: "Animals belonging to Phylum Aschelminthes (Roundworms) possess which type of internal body cavity layout?", o: ["True Coelom", "Pseudocoelom", "Acoelomate structure", "Schizocoelom"], c: 1 }
+                {q: "Which phylum shows a cellular level of body organization?", o: ["Porifera", "Coelenterata", "Ctenophora", "Platyhelminthes"], c: 0},
+                {q: "Water enters the body of sponges through specialized micro-pores called:", o: ["Ostia", "Osculum", "Choanocytes", "Spicules"], c: 0},
+                {q: "The large central exit cavity of a sponge body is called the:", o: ["Osculum", "Ostia", "Spongocoel", "Gastrovascular cavity"], c: 0},
+                {q: "Which cells line the spongocoel and canal systems of Phylum Porifera?", o: ["Choanocytes / Collar cells", "Cnidocytes", "Flame cells", "Pinacocytes"], c: 0},
+                {q: "Cnidoblasts or stinging cells are characteristic features of which phylum?", o: ["Coelenterata", "Porifera", "Ctenophora", "Annelida"], c: 0},
+                {q: "Hydra exhibits which type of symmetry layout?", o: ["Radial symmetry", "Bilateral symmetry", "Asymmetry", "Spherical symmetry"], c: 0},
+                {q: "The alternation of generations observed in certain cnidarians (like Obelia) is called:", o: ["Metagenesis", "Metamorphosis", "Parthenogenesis", "Pedogenesis"], c: 0},
+                {q: "Which of the following phyla is commonly known as 'Comb jellies'?", o: ["Ctenophora", "Coelenterata", "Porifera", "Platyhelminthes"], c: 0},
+                {q: "Ctenophores capture food and move by using how many rows of ciliated comb plates?", o: ["Eight", "Four", "Two", "Six"], c: 0},
+                {q: "Organisms of Phylum Platyhelminthes are commonly known as:", o: ["Flatworms", "Roundworms", "Hookworms", "Segmented worms"], c: 0},
+                {q: "What type of body cavity profile is seen in Platyhelminthes?", o: ["Acoelomate", "Pseudocoelomate", "Coelomate", "Haemocoel"], c: 0},
+                {q: "Flame cells are specialized structures that perform excretion in which phylum?", o: ["Platyhelminthes", "Aschelminthes", "Annelida", "Porifera"], c: 0},
+                {q: "Which animal phylum shows a true pseudocoelom body cavity plan?", o: ["Aschelminthes", "Platyhelminthes", "Annelida", "Coelenterata"], c: 0},
+                {q: "Ascaris lumbricoides is a well-known member of which phylum?", o: ["Aschelminthes", "Annelida", "Platyhelminthes", "Ctenophora"], c: 0},
+                {q: "True metameric segmentation is a primary key feature of which phylum?", o: ["Annelida", "Aschelminthes", "Platyhelminthes", "Porifera"], c: 0},
+                {q: "Earthworms use which specialized structures for excretion and osmoregulation?", o: ["Nephridia", "Flame cells", "Malpighian tubules", "Gills"], c: 0},
+                {q: "What type of circulatory system is found typically in Phylum Annelida?", o: ["Closed type", "Open type", "Absent", "Mixed type"], c: 0},
+                {q: "Locomotive lateral appendages found in aquatic annelids like Nereis are called:", o: ["Parapodia", "Setae", "Tentacles", "Suckers"], c: 0},
+                {q: "The body cavity lined by mesoderm tissue sheets on both sides is called a:", o: ["True Coelom", "Pseudocoelom", "Acoelom", "Blastocoel"], c: 0},
+                {q: "Which of the following animals is blood-sucking and belongs to Annelida?", o: ["Hirudinaria (Leech)", "Pheretima", "Nereis", "Fasciola"], c: 0},
+                {q: "Sponges reproduce asexually primarily through the process of:", o: ["Fragmentation / Gemmules", "Regeneration only", "Binary fission", "Budding only"], c: 0},
+                {q: "The skeleton of sponges is made up of calcareous/siliceous structural elements called:", o: ["Spicules and spongin fibers", "Chitinous plates", "Bony elements", "Cartilage"], c: 0},
+                {q: "The fixed, polyp body form found in Cnidarians is represented by which animal?", o: ["Hydra / Adamsia", "Aurelia (Jellyfish)", "Obelia medusa", "Ctenoplana"], c: 0},
+                {q: "The free-swimming umbrella-shaped body form of Cnidarians is known as:", o: ["Medusa", "Polyp", "Blastula", "Planula"], c: 0},
+                {q: "Bioluminescence is well-marked and highly characteristic in members of which phylum?", o: ["Ctenophora", "Porifera", "Platyhelminthes", "Aschelminthes"], c: 0},
+                {q: "Tapeworm (Taenia) absorbs nutrients from the host gut directly through its:", o: ["Body surface / Hooks & Suckers", "Mouth parts", "Gastrovascular system", "Pharynx"], c: 0},
+                {q: "Animals that have three primary germ layers during development are called:", o: ["Triploblastic", "Diploblastic", "Ectoblastic", "Endoblastic"], c: 0},
+                {q: "In diploblastic animals, which undifferentiated layer is present between ectoderm and endoderm?", o: ["Mesoglea", "Mesoderm", "Peritoneum", "Mesenchyme"], c: 0},
+                {q: "Which of the following displays bilateral symmetry and an organ-system level of organization?", o: ["Annelida", "Hydra", "Sponges", "Sycon"], c: 0},
+                {q: "The non-segmented roundworms belong to which phylum?", o: ["Aschelminthes", "Annelida", "Platyhelminthes", "Ctenophora"], c: 0},
+                {q: "Which worm has a fully complete alimentary canal with a well-developed muscular pharynx?", o: ["Roundworm (Aschelminthes)", "Flatworm", "Tapeworm", "Liver fluke"], c: 0},
+                {q: "The neural system of annelids consists of paired structures called:", o: ["Ganglia linked by double ventral nerve cords", "Brain only", "Nerve net without cords", "Dorsal solid cord"], c: 0},
+                {q: "Which of the following describes Nereis correctly regarding its sex lifestyle?", o: ["Dioecious ( sexes separate)", "Monoecious", "Hermaphrodite", "Asexual only"], c: 0},
+                {q: "Earthworms and leeches are examples of animals that are:", o: ["Monoecious (Hermaphrodites)", "Dioecious", "Unisexual", "Neotenic"], c: 0},
+                {q: "The extracellular matrix jelly layer found in sponges is called:", o: ["Mesenchyme", "Mesoglea", "Mesoderm", "Coelom"], c: 0},
+                {q: "Which animal phylum lacks any form of specialized tissues or organs?", o: ["Porifera", "Coelenterata", "Ctenophora", "Platyhelminthes"], c: 0},
+                {q: "Sea anemone (Adamsia) is classified inside which phylum?", o: ["Coelenterata", "Porifera", "Ctenophora", "Annelida"], c: 0},
+                {q: "Liver fluke (Fasciola) lives inside the body of its host as an:", o: ["Endoparasite", "Ectoparasite", "Free living organism", "Symbiont"], c: 0},
+                {q: "The hooks and suckers are distinct adaptations observed in parasitic forms of:", o: ["Platyhelminthes", "Aschelminthes", "Annelida", "Porifera"], c: 0},
+                {q: "An animal possessing a true coelom lined by mesoderm is classified as a:", o: ["Coelomate", "Pseudocoelomate", "Acoelomate", "Diploblastic isolate"], c: 0},
+                {q: "Which of the following features is common to both Annelids and Aschelminthes?", o: ["Bilateral symmetry", "True segmentation", "Closed circulation", "Pseudocoelom"], c: 0}
             ]
         };
 
@@ -534,13 +727,14 @@
         ];
 
         function loadTestEngine() {
-            SUBJECTS.forEach((sub) => {
+            SUBJECTS.forEach((sub, sIdx) => {
                 let questionsList = [];
                 for (let i = 0; i < TOTAL_QS; i++) {
                     if (i >= AR_THRESHOLD) {
                         let arSource = AR_BANK[sub][i - AR_THRESHOLD];
                         questionsList.push({
                             id: i,
+                            subjectName: sub,
                             type: "Assertion & Reason",
                             question: arSource.q,
                             options: [...AR_OPTIONS],
@@ -549,14 +743,14 @@
                             timeSpent: 0
                         });
                     } else {
-                        let pool = SYLLABUS_BANK[sub];
-                        let template = pool[i % pool.length];
+                        let rawQ = MASTER_RAW_BANK[sub][i];
                         questionsList.push({
                             id: i,
+                            subjectName: sub,
                             type: "MCQ",
-                            question: `[Q-${i+1}] ${template.q}`,
-                            options: [...template.o],
-                            correctIndex: template.c,
+                            question: `[Q-${i+1}] ${rawQ.q}`,
+                            options: [...rawQ.o],
+                            correctIndex: rawQ.c,
                             userAnswer: null,
                             timeSpent: 0
                         });
@@ -636,7 +830,7 @@
             
             let badge = document.getElementById('badge-container');
             if (targetQ.type === "Assertion & Reason") {
-                badge.innerHTML = `<span class="section-badge ar-type">ASSERTION & REASONING (HEADING EVAL)</span>`;
+                badge.innerHTML = `<span class="section-badge ar-type">ASSERTION & REASONING</span>`;
             } else {
                 badge.innerHTML = `<span class="section-badge">MULTIPLE CHOICE QUESTION</span>`;
             }
@@ -710,6 +904,9 @@
             let attemptedCount = 0;
             const tableBody = document.getElementById('analytics-tbody');
             tableBody.innerHTML = "";
+            
+            const reviewContainer = document.getElementById('review-cards-container');
+            reviewContainer.innerHTML = "";
 
             testStructure.forEach(sub => {
                 let c = 0, w = 0, b = 0;
@@ -717,10 +914,15 @@
                 let totalTimeOnSubject = 0;
                 let totalAttemptedInSubject = 0;
 
-                sub.questions.forEach(q => {
+                sub.questions.forEach((q, idx) => {
                     totalTimeOnSubject += q.timeSpent;
+                    
+                    let isCorrect = false;
+                    let isBlank = false;
+
                     if (q.userAnswer === null) {
                         b++;
+                        isBlank = true;
                     } else {
                         totalAttemptedInSubject++;
                         attemptedCount++;
@@ -728,16 +930,34 @@
                             c++;
                             correctCount++;
                             subScore += 4;
+                            isCorrect = true;
                         } else {
                             w++;
                             subScore -= 1;
                         }
                     }
+
+                    // GENERATE INCORRECT OR BLANK CARDS FOR REVIEW LEDGER
+                    if (!isCorrect) {
+                        let card = document.createElement('div');
+                        card.className = `review-card ${isBlank ? 'blank-card' : ''}`;
+                        
+                        let givenAnsText = isBlank ? `<span class="text-blank">Unattempted (Blank)</span>` : `<span class="text-wrong">${q.options[q.userAnswer]}</span>`;
+                        let correctAnsText = `<span class="text-correct">${q.options[q.correctIndex]}</span>`;
+
+                        card.innerHTML = `
+                            <div class="review-q-header">${q.subjectName} — Q.${idx + 1} (${q.type})</div>
+                            <div style="font-size: 1rem; margin-bottom: 8px; white-space: pre-line;">${q.question}</div>
+                            <div class="review-details">
+                                <strong>Your Answer:</strong> ${givenAnsText}<br>
+                                <strong>Correct Key:</strong> ${correctAnsText}
+                            </div>
+                        `;
+                        reviewContainer.appendChild(card);
+                    }
                 });
 
                 totalScore += subScore;
-                
-                // Calculates time divided exclusively by the questions you interacted with or solved.
                 let avgTimePerQuestion = totalAttemptedInSubject > 0 ? (totalTimeOnSubject / totalAttemptedInSubject) : 0;
 
                 let tr = document.createElement('tr');
@@ -754,6 +974,10 @@
             document.getElementById('res-score').innerText = `${totalScore} / 720`;
             let acc = attemptedCount > 0 ? Math.round((correctCount / attemptedCount) * 100) : 0;
             document.getElementById('res-accuracy').innerText = `${acc}%`;
+
+            if(reviewContainer.innerHTML === "") {
+                reviewContainer.innerHTML = `<p style="color: var(--accent); font-weight: 600;">Phenomenal! Perfect score! No incorrect or omitted items found to show.</p>`;
+            }
         }
     </script>
 </body>
